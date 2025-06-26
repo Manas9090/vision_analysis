@@ -1,22 +1,25 @@
 import os
 import boto3
 import traceback
+import face_recognition
+import cv2
 
+# Input Files (Check filenames match your EC2 files)
 reference_image_path = "Manas-the-small.jpeg"
-input_video_path = "Manas_video.mp4"
+input_video_path = "Manas-video.mp4"
 
 # S3 Configuration
-s3_bucket = "manas-bucket100"  # Replace with your actual bucket
+s3_bucket = "manas-bucket100"  # Replace with your bucket name
 output_s3_path = "outputs/processed_output.mp4"
 error_s3_path = "outputs/error_log.txt"
 
-# Local temp files
+# Local Temp Files
 output_video_path = "processed_output.mp4"
 error_log_path = "error_log.txt"
 
-# Upload helper
+# Upload Helper
 def upload_to_s3(local_path, bucket, s3_path):
-    s3 = boto3.client('s3')
+    s3 = boto3.client('s3')  # Uses credentials from aws configure
     try:
         s3.upload_file(local_path, bucket, s3_path)
         print(f"[INFO] Uploaded {local_path} to s3://{bucket}/{s3_path}")
