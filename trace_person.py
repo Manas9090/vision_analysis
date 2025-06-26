@@ -63,4 +63,25 @@ try:
                 print(f"[ALERT] Target person detected in frame {frame_count}!")
                 top, right, bottom, left = top * 2, right * 2, bottom * 2, left * 2
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                cv2.putText(frame, "TARGET", (left, top -
+                cv2.putText(frame, "TARGET", (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+        out.write(frame)
+        frame_count += 1
+
+    video_capture.release()
+    out.release()
+
+    print(f"[INFO] Processing complete. Total frames: {frame_count}, Target detected in {detected_frames} frames.")
+    
+    # Upload output video to S3
+    upload_to_s3(output_video_path, s3_bucket, output_s3_path)
+
+except Exception as e:
+    print(f"[ERROR] Processing failed: {e}")
+    
+    # Save error log locally
+    with open(error_log_path, 'w') as f:
+        f.write(traceback.format_exc())
+    
+    # Upload error log to S3
+    upload_to_s3(error_log_path, s3_bucket, error_s3_path)
