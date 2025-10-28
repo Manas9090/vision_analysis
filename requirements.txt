@@ -1,4 +1,5 @@
-#face_recognition==1.3.0
-opencv-python==4.9.0.80
-boto3==1.34.100
-
+face-recognition==1.3.0
+dlib-bin
+onnxruntime
+opencv-python-headless
+streamlit
